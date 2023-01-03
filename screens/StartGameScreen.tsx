@@ -1,4 +1,4 @@
-import { Pressable, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 export default function StartGameScreen() {
   return (
