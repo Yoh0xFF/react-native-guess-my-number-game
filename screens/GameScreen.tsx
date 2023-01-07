@@ -1,16 +1,76 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
-interface Props {}
+import NumberContainer from '../components/game/NumberContainer';
+import Card from '../components/ui/Card';
+import HintText from '../components/ui/HintText';
+import PrimaryButton from '../components/ui/PrimaryButton';
+import Title from '../components/ui/Title';
 
-export default function GameScreen({}: Props) {
+type DirectionType = 'lower' | 'higher';
+
+let minBoundary = 1;
+let maxBoundary = 100;
+
+interface Props {
+  userNumber: number;
+  onGameOver: () => void;
+}
+
+export default function GameScreen({ userNumber, onGameOver }: Props) {
+  const [currentGuess, setCurrentGuess] = useState<number>(0);
+
+  useEffect(() => {
+    const initialGuess = generateRandomBetween(1, 100, userNumber);
+    setCurrentGuess(initialGuess);
+  }, []);
+
+  useEffect(() => {
+    if (currentGuess === userNumber) {
+      onGameOver();
+    }
+  }, [currentGuess, userNumber, onGameOver]);
+
+  const nextGuessHandler = (direction: DirectionType) => {
+    if (
+      (direction === 'lower' && currentGuess < userNumber) ||
+      (direction === 'higher' && currentGuess > userNumber)
+    ) {
+      Alert.alert("Don't lie", 'You know that this is wrong...', [
+        { text: 'Sorry!', style: 'cancel' },
+      ]);
+      return;
+    }
+
+    if (direction === 'lower') {
+      maxBoundary = currentGuess;
+    } else {
+      minBoundary = currentGuess + 1;
+    }
+
+    const newRandomNumber = generateRandomBetween(
+      minBoundary,
+      maxBoundary,
+      currentGuess
+    );
+    setCurrentGuess(newRandomNumber);
+  };
+
   return (
     <View style={styles.screen}>
-      <Text>Opponent's Guess</Text>
-      {/* GUESS  */}
-      <View>
-        <Text>Higher or lower?</Text>
-        {/* + - buttons */}
-      </View>
+      <Title>Opponent's Guess</Title>
+      <NumberContainer>{currentGuess}</NumberContainer>
+      <Card>
+        <HintText>Higher or lower?</HintText>
+        <View>
+          <PrimaryButton onPress={() => nextGuessHandler('lower')}>
+            -
+          </PrimaryButton>
+          <PrimaryButton onPress={() => nextGuessHandler('higher')}>
+            +
+          </PrimaryButton>
+        </View>
+      </Card>
 
       <View>{/* LOG ROUNDS */}</View>
     </View>
@@ -23,3 +83,17 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 });
+
+function generateRandomBetween(
+  min: number,
+  max: number,
+  exclude: number
+): number {
+  const randomNumber = Math.floor(Math.random() * (max - min)) + min;
+
+  if (randomNumber === exclude) {
+    return generateRandomBetween(min, max, exclude);
+  } else {
+    return randomNumber;
+  }
+}
