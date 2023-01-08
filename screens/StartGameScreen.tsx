@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 import Card from '../components/ui/Card';
 import HintText from '../components/ui/HintText';
@@ -38,7 +46,7 @@ export default function StartGameScreen({ onPickNumber }: Props) {
   };
 
   return (
-    <View style={styles.rootContainer}>
+    <Pressable style={styles.rootContainer} onPress={Keyboard.dismiss}>
       <Title>Guess My Number</Title>
 
       <Card>
@@ -63,7 +71,7 @@ export default function StartGameScreen({ onPickNumber }: Props) {
           </View>
         </View>
       </Card>
-    </View>
+    </Pressable>
   );
 }
 

@@ -1,20 +1,19 @@
 import { ReactNode } from 'react';
-import { StyleSheet, Text } from 'react-native';
-
-import Colors from '../../constants/colors';
+import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
 
 interface Props {
   children: ReactNode;
+  style?: StyleProp<TextStyle>;
 }
 
-export default function Title({ children }: Props) {
-  return <Text style={styles.title}>{children}</Text>;
+export default function Title({ children, style }: Props) {
+  return <Text style={[styles.title, style ?? {}]}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
   title: {
+    fontFamily: 'open-sans-bold',
     fontSize: 24,
-    fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
     borderWidth: 2,
