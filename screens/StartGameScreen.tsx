@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import {
   Alert,
-  Keyboard,
-  Pressable,
+  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 
 import Card from '../components/ui/Card';
@@ -21,6 +22,8 @@ interface Props {
 
 export default function StartGameScreen({ onPickNumber }: Props) {
   const [enteredNumber, setEnteredNumber] = useState('');
+
+  const { height: deviceHeight } = useWindowDimensions();
 
   const numberInputHandler = (input: string) => {
     setEnteredNumber(input);
@@ -46,39 +49,51 @@ export default function StartGameScreen({ onPickNumber }: Props) {
   };
 
   return (
-    <Pressable style={styles.rootContainer} onPress={Keyboard.dismiss}>
-      <Title>Guess My Number</Title>
+    <ScrollView style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior='position'>
+        <View
+          style={[
+            styles.rootContainer,
+            { marginTop: deviceHeight < 400 ? 30 : 100 },
+          ]}
+        >
+          <Title>Guess My Number</Title>
 
-      <Card>
-        <HintText>Enter a Number</HintText>
+          <Card>
+            <HintText>Enter a Number</HintText>
 
-        <TextInput
-          style={styles.numberInput}
-          maxLength={2}
-          keyboardType='number-pad'
-          autoCapitalize='none'
-          autoCorrect={false}
-          onChangeText={numberInputHandler}
-          value={enteredNumber}
-        />
+            <TextInput
+              style={styles.numberInput}
+              maxLength={2}
+              keyboardType='number-pad'
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={numberInputHandler}
+              value={enteredNumber}
+            />
 
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
-          </View>
-          <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
-          </View>
+            <View style={styles.buttonsContainer}>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
+              </View>
+              <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={confirmInputHandler}>
+                  Confirm
+                </PrimaryButton>
+              </View>
+            </View>
+          </Card>
         </View>
-      </Card>
-    </Pressable>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
+
+const { height: deviceHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    marginTop: 100,
     alignItems: 'center',
   },
 
