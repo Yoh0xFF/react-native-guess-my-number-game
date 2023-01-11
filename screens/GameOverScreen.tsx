@@ -41,7 +41,7 @@ export default function GameOverScreen({
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.rootContainer}>
-        <Title>Game Over!</Title>
+        <Title style={styles.title}>Game Over!</Title>
 
         <View style={[styles.imageContainer, imageStyle]}>
           <Image
@@ -62,7 +62,7 @@ export default function GameOverScreen({
   );
 }
 
-const { width: deviceWidth } = Dimensions.get('window');
+const { width: deviceWidth, height: deviceHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -70,6 +70,10 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  title: {
+    marginTop: deviceHeight < 400 ? 0 : 36,
   },
 
   imageContainer: {
